@@ -11,8 +11,8 @@ class Legs(Objects):
 
     def show_stat_object(self):
         print("Object : \t Legs")
-        print("HP : ", self.hp)
-        print("Armor : ", self.armor)
+        print("HP : " + str(self.hp))
+        print("Armor : " + str(self.armor))
         print("")
 
     def generate_random_legs(selfself, level):

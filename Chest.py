@@ -11,8 +11,8 @@ class Chest(Objects):
 
     def show_stat_object(self):
         print("Object : \t Chest")
-        print("hp : ", self.hp)
-        print("armor : ", self.armor)
+        print("hp : "+ str(self.hp))
+        print("armor : "+ str(self.armor))
         print("")
 
     def generate_random_chest(selfself, level):

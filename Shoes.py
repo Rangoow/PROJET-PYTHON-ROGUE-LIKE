@@ -12,8 +12,8 @@ class Shoes(Objects):
 
     def show_stat_object(self):
         print("Object : \t Shoes")
-        print("HP : ", self.hp)
-        print("Armor : ", self.armor)
+        print("HP : " + str(self.hp))
+        print("Armor : "+ str(self.armor))
         print("")
 
     def generate_random_shoes(selfself, level):

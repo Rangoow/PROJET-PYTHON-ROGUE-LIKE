@@ -51,6 +51,7 @@ class gameTestArchitecture:
         self.gameLoop()
 
     def menu(self):
+        print("")
         print("You are at level : ", self.level,'.')
         self.disp_separator(21)
         print("Choose an action : ")
@@ -70,8 +71,10 @@ class gameTestArchitecture:
             try:
                 choice = input(">> ")
                 if int(choice) == 1:
+                    self.disp_blank(1)
                     self.adventure_continue()
                 elif int(choice) == 2:
+                    self.disp_blank(1)
                     self.hero.displayStat()
                 elif int(choice) == 3:
                     print("Thanks for your participation !")
@@ -92,14 +95,22 @@ class gameTestArchitecture:
     def random_action(self):
         tmp = random.choice(self.room)
         if int(tmp) == 1:
+            self.disp_blank(1)
             self.random_battle()
         elif int(tmp) == 2:
+            self.disp_blank(1)
             self.shop()
         elif int(tmp) == 3:
+            self.disp_blank(1)
             self.rest()
 
     def random_battle(self):
-        print("You encounter an evil CIA agent ! Let's fight against him")
+        if self.level < 20:
+            print("You encounter an evil CIA agent ! Let's fight against him")
+            self.disp_separator(50)
+        elif self.level >= 20:
+            print("You are at the final, let's defeat Donald Trump and recover the Alien eggs !")
+            self.disp_separator(69)
         self.battle()
 
     def battle(self):
@@ -109,9 +120,11 @@ class gameTestArchitecture:
         else:
             enemy.generate_new_monster(self.level)
         while self.hero.hp > 0 and enemy.hp > 0:
-            print("Enenmy has :",str(enemy.hp),"/",str(enemy.max_hp))
-            print("You have :",self.hero.hp,"/",str(self.hero.max_hp))
-            self.hero.displayStat()
+            self.disp_separator(16)
+            print("Eneny has :" + str(enemy.hp) + "/" + str(enemy.max_hp))
+            print("You have  :" + str(self.hero.hp) + "/" + str(self.hero.max_hp))
+            self.disp_separator(16)
+            self.disp_blank(1)
             pass_turn = True
             while pass_turn:
                 print("Choose an action : ")
@@ -126,7 +139,7 @@ class gameTestArchitecture:
                         self.attack_possibility(enemy)
                         pass_turn = False
                     elif int(choice) == 2:
-                        pass_turn = False
+                        self.use_potion()
                     elif int(choice) == 3:
                         print("End of your turn")
                         pass_turn = False
@@ -139,15 +152,38 @@ class gameTestArchitecture:
         if self.hero.hp > 0:
             print("Vous avez fini la salle numero ", self.level, ".")
             self.hero.check_if_lvl_up()
-            self.hero.displayStat()
             print("Que voulez vous faire : ")
             self.hero.change_equipement()
-            self.level+=1
+            self.level += 1
             # Passer a la salle suivant/ regarder son inventaire.
-            add_rest_chance = randint(1,5)
+            add_rest_chance = randint(1, 5)
             if add_rest_chance > 3:
                 print("You aerned an additional rest ! ")
-                self.hero.restLeft +=1
+                self.hero.restLeft += 1
+
+    def use_potion(self):
+        self.disp_separator(14)
+        print(" (1) HP Potion")
+        print(" (2) MP Potion")
+        print(" (3) Return   ")
+        self.disp_separator(14)
+        while True:
+            choice = input(">> ")
+            try:
+                if int(choice) == 1 and self.hero.hp < self.hero.max_hp:
+                    self.hero.hp += self.level*4
+                    if self.hero.hp > self.hero.max_hp:
+                        self.hero.hp = self.hero.max_hp
+                    break
+                elif int(choice) == 2:
+                    self.hero.mp += 20
+                    break
+                elif int(choice) == 3:
+                    break
+                else:
+                    print("Please enter a correct Value")
+            except ValueError:
+                print("Please enter a correct Value")
 
     def attack_possibility(self, enemy):
         while enemy.hp > 0 and self.hero.hp > 0:
@@ -169,30 +205,36 @@ class gameTestArchitecture:
                         choice = input(">> ")
                         try:
                             if int(choice) == 1:
-                                print("You choose spell 1 - ...")
+                                print("You choose spell 1 !")
                                 if self.hero.check_if_enought_mana(int(choice)):
                                     self.hero.magic_skill_1(enemy)
                                     if enemy.check_if_monster_is_dead():
                                         enemy.generate_loot(self.hero)
                                     break
                                 else:
+                                    self.disp_blank(1)
                                     print("Not enought mana to cast this spell")
+                                    self.disp_blank(1)
                                     break
                             elif int(choice) == 2:
                                 if self.hero.check_if_enought_mana(int(choice)):
-                                    print("You choose spell 2 - ...")
+                                    print("You choose spell 2 !")
                                     self.hero.magic_skill_2()
                                     break
                                 else:
+                                    self.disp_blank(1)
                                     print("Not enought mana to cast this spell")
+                                    self.disp_blank(1)
                                     break
                             elif int(choice) == 3:
                                 if self.hero.check_if_enought_mana(int(choice)):
-                                    print("You choose spell 3 - ...")
+                                    print("You choose spell 3 !")
                                     self.hero.magic_skill_3(enemy)
                                     break
                                 else:
+                                    self.disp_blank(1)
                                     print("Not enought mana to cast this spell")
+                                    self.disp_blank(1)
                                     break
                             else:
                                 print("Please enter a correct Value")
@@ -220,23 +262,27 @@ class gameTestArchitecture:
         while True:
             choice = input(">> ")
             try:
-                if int(choice) == 1 :
-                    if self.hero.inventory.getGold() >=hp_pot_price:
+                if int(choice) == 1:
+                    if self.hero.inventory.getGold() >= hp_pot_price:
                         print("You bought a HP potion !")
                         self.hero.inventroy.gold -= hp_pot_price
                         self.hero.number_of_hp_pots += 1
                         break
                     else:
+                        self.disp_blank(1)
                         print("Sorry but you don't have enought gold...")
+                        self.disp_blank(1)
                         break
                 elif int(choice) == 2:
-                    if self.hero.inventory.getGold() >=mp_pot_price:
+                    if self.hero.inventory.getGold() >= mp_pot_price:
                         print("You bought a MP potion !")
                         self.hero.inventroy.gold -= mp_pot_price
                         self.hero.number_of_mp_pots += 1
                         break
                     else:
+                        self.disp_blank(1)
                         print("Sorry but you don't have enought gold...")
+                        self.disp_blank(1)
                         break
                 elif int(choice) == 3:
                     break
@@ -258,8 +304,10 @@ class gameTestArchitecture:
                         self.hero.hp += hprestored
                         if self.hero.hp > self.hero.max_hp:
                             self.hero.hp = self.hero.max_hp
+                        self.disp_blank(1)
                         print("You took a 10 minutes break, you're now ready !")
                         print("You have now : " + str(self.hero.hp) + "/" + str(self.hero.max_hp) + "HP.")
+                        self.disp_blank(1)
                         self.hero.restLeft -= 1
                         break
                     elif int(choice) == 2:
@@ -273,10 +321,15 @@ class gameTestArchitecture:
 
     def game_state(self):
         if self.hero.hp < 0:
+            self.disp_separator(35)
             print("Sorry but you are dead, try again !")
+            self.disp_separator(35)
+            self.disp_blank(2)
             return False
         elif self.level > 20:
+            self.disp_separator(38)
             print("You finished the game, congratulations !")
+            self.disp_separator(38)
             return False
         else:
             return True

@@ -14,8 +14,8 @@ class Jewel(Objects):
 
     def show_stat_object(self):
         print("Object : \t Jewel")
-        print("HP : ", self.hp)
-        print("MP : ", self.mp)
+        print("HP : " + str(self.hp))
+        print("MP : " + str(self.mp))
         print("")
 
     def generate_random_jewel(self, level):

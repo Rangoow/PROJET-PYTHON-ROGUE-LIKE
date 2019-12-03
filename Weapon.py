@@ -13,7 +13,7 @@ class Weapon(Objects):
 
     def show_stat_object(self):
         print("Object : \t Weapon")
-        print("Attack range : " + self.min_atk + " - " + self.max_atk)
+        print("Attack range : " + str(self.min_atk) + " - " + str(self.max_atk))
         print("")
 
     def generate_random_weapon(self, level):
