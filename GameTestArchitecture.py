@@ -118,7 +118,7 @@ class gameTestArchitecture:
         if self.level >= 20:
             enemy.generate_final_boss()
         else:
-            enemy.generate_new_monster(self.level)
+            enemy.generate_enemy(self.level)
         while self.hero.hp > 0 and enemy.hp > 0:
             self.disp_separator(16)
             print("Eneny has :" + str(enemy.hp) + "/" + str(enemy.max_hp))
@@ -151,7 +151,7 @@ class gameTestArchitecture:
 
         if self.hero.hp > 0:
             print("Vous avez fini la salle numero ", self.level, ".")
-            self.hero.check_if_lvl_up()
+            self.hero.check_for_level_up()
             print("Que voulez vous faire : ")
             self.hero.change_equipement()
             self.level += 1
@@ -197,7 +197,7 @@ class gameTestArchitecture:
                 if int(choice) == 1:
                     self.hero.basic_attack(enemy)
                     enemy.attack_hero(self.hero)
-                    if enemy.check_if_monster_is_dead():
+                    if enemy.check_enemy_state():
                         enemy.generate_loot(self.hero)
                 elif int(choice) == 2:
                     self.hero.show_skill_in_book()
@@ -206,9 +206,9 @@ class gameTestArchitecture:
                         try:
                             if int(choice) == 1:
                                 print("You choose spell 1 !")
-                                if self.hero.check_if_enought_mana(int(choice)):
+                                if self.hero.mana_available_check(int(choice)):
                                     self.hero.magic_skill_1(enemy)
-                                    if enemy.check_if_monster_is_dead():
+                                    if enemy.check_enemy_state():
                                         enemy.generate_loot(self.hero)
                                     break
                                 else:
@@ -217,7 +217,7 @@ class gameTestArchitecture:
                                     self.disp_blank(1)
                                     break
                             elif int(choice) == 2:
-                                if self.hero.check_if_enought_mana(int(choice)):
+                                if self.hero.mana_available_check(int(choice)):
                                     print("You choose spell 2 !")
                                     self.hero.magic_skill_2()
                                     break
@@ -227,7 +227,7 @@ class gameTestArchitecture:
                                     self.disp_blank(1)
                                     break
                             elif int(choice) == 3:
-                                if self.hero.check_if_enought_mana(int(choice)):
+                                if self.hero.mana_available_check(int(choice)):
                                     print("You choose spell 3 !")
                                     self.hero.magic_skill_3(enemy)
                                     break

@@ -13,7 +13,7 @@ class Monster(Character):
         self.armor = 0
 
     #USED
-    def generate_new_monster(self, level):
+    def generate_enemy(self, level):
         self.lvl = level
         self.hp = randint(int(level * 2), int(level * 4))
         self.max_hp = self.hp
@@ -49,32 +49,26 @@ class Monster(Character):
         tmp = randint(1,3)
         if tmp == 3:
             if random_stuff == 1:
-                weapon = Weapon()
                 weapon = Weapon.generate_random_weapon(self, hero.lvl + 1)
                 print("Vous avez drop une weapon !")
                 hero.inventory.equipement.loot.append(weapon)
             elif random_stuff == 2:
-                jewel = Jewel()
                 jewel = Jewel.generate_random_jewel(self, hero.lvl + 1)
                 print("Vous avez droppé un nouveau jewel !")
                 hero.inventory.equipement.loot.append(jewel)
             elif random_stuff == 3:
-                head = Head()
                 head = Head.generate_random_head(self, hero.lvl + 1)
                 print("Vous avez droppé une head !")
                 hero.inventory.equipement.loot.append(head)
             elif random_stuff == 4:
-                chest = Chest()
                 chest = Chest.generate_random_chest(self, hero.lvl + 1)
                 print("Vous avez droppé un chest !")
                 hero.inventory.equipement.loot.append(chest)
             elif random_stuff == 5:
-                legs = Legs()
                 legs = Legs.generate_random_legs(self, hero.lvl + 1)
                 print("Vous avez droppé un legs !")
                 hero.inventory.equipement.loot.append(legs)
             elif random_stuff == 6:
-                shoes = Shoes()
                 shoes = Shoes.generate_random_shoes(self, hero.lvl + 1)
                 print("Vous avez droppé un shoes !")
                 hero.inventory.equipement.loot.append(shoes)
@@ -83,24 +77,24 @@ class Monster(Character):
     def attack_monster(self, value):
         self.hp -= value
     #USED
-    def reduce_atk_monster(self, value):
-        print("Vous avez diminué l'attaque du monstre de ", value)
-        self.min_atk -= 0.2 * self.min_atk
-        self.max_atk -= 0.2 * self.max_atk
+    def reduce_enemy_attack(self, value):
+        self.min_atk -= 0.25 * self.min_atk
+        self.max_atk -= 0.25 * self.max_atk
+        print("You reduce the enemy attack to : " + str(value))
 
     #USED
     def attack_hero(self, hero):
         damage = randint(int(self.min_atk), int(self.max_atk))
-        print("L'enemie vous a infligé ", damage, " dégats")
         hero.receive_damage(damage)
-        print("Le hero possède maintenant ", hero.hp," points de vie")
+        print("The enemy deals you : "+  str(damage) + " damages")
+        print("You have : " + str(hero.hp) + " HP")
 
     #USED
-    def check_if_monster_is_dead(self):
+    def check_enemy_state(self):
         if self.hp > 0:
-            print("Le monstre a", self.hp, "hp après votre attaque.")
+            print("The enemy has : " + str(self.hp) + "HP after your attack")
             return False
         else:
             self.hp = 0
-            print("Le monstre est mort après votre attaque.")
+            print("The enemy is dead after your attack !")
             return True

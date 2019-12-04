@@ -10,8 +10,8 @@ class Hero(Character):
         self.name = ""
         self.classe = ""
         self.lvl = 1
-        self.requiredexp = 1
-        self.currentexp = 0
+        self.next_level_xp = 1
+        self.xp = 0
         ###Base attribute
         self.hp = 50
         self.max_hp = 50
@@ -23,8 +23,7 @@ class Hero(Character):
         self.number_of_mp_pots = 1
         self.restLeft = 1
         self.inventory.equipement.generate_base_equipement(self.lvl) ## Pour donner des armes des base
-        self.calulate_stat_after_basic_gear_equipement()
-        #self.book = []
+        self.stats_improve_from_stuff()
 
     def setHp(self):
         self.hp = self.max_hp
@@ -33,11 +32,11 @@ class Hero(Character):
         self.name = name
 
     def setClass(self, classe):
-        if(classe == 1):
+        if classe == 1:
             self.classe = "Naruto Runner"
-        elif(classe == 2):
+        elif classe == 2:
             self.classe = "Berzerk"
-        elif(classe == 3):
+        elif classe == 3:
             self.classe = "Stone Thrower"
         else:
             self.classe = "noob"
@@ -49,7 +48,7 @@ class Hero(Character):
     #modify the display add style
     def displayStat(self):
         print("Je suis un " + self.classe + " de niveau " + str(self.lvl) + ", je possède " +str(self.hp)+ "/" + str(self.max_hp) + " points de vies. J'ai également " + str(self.min_atk) + " points d'attaques, " + str(self.armor) + " points de defence.")
-        print("requiredxp : " + str(self.requiredexp) + "  currentxp : " + str(self.currentexp) + "  max atk : " + str(self.max_atk))
+        print("requiredxp : " + str(self.next_level_xp) + "  currentxp : " + str(self.xp) + "  max atk : " + str(self.max_atk))
         print("mp : " + str(self.mp))
         print("Gold : " + str(self.inventory.getGold()))
 
@@ -63,26 +62,26 @@ class Hero(Character):
         return self.lvl
 
     #USED
-    def magic_skill_1_desc(self):
+    def description_skill1_display(self):
         print("Sort 1 : Sort qui inflige de gros dégats sur un monstre : coûte 20 mp")
 
     # USED
-    def magic_skill_2_desc(self):
+    def description_skill2_display(self):
         print("Sort 2 : Redonne 15% de sa vie au héros : coûte 30 mp")
 
     # USED
-    def magic_skill_3_desc(self):
+    def description_skill3_display(self):
         print("Sort 3 : Reduit l'attaque d'un monstre de 20% : coûte 20 mp")
 
     # USED
     def show_skill_in_book(self):
         print("Vous avez 3 sorts a disposition : ")
-        self.magic_skill_1_desc()
-        self.magic_skill_2_desc()
-        self.magic_skill_3_desc()
+        self.description_skill1_display()
+        self.description_skill2_display()
+        self.description_skill3_display()
 
     # USED
-    def check_if_enought_mana(self, spell):  #We check if we can cast the spell  #20 30 15 30 20
+    def mana_available_check(self, spell):  #We check if we can cast the spell  #20 30 15 30 20
         if spell == 1:
             return True if self.mp >= 20 else False
         elif spell == 2:
@@ -91,7 +90,7 @@ class Hero(Character):
             return True if self.mp >= 15 else False
 
     #USED
-    def calulate_stat_after_basic_gear_equipement(self): #To calculate the stat after the aquisition of a new equipement
+    def stats_improve_from_stuff(self): #To calculate the stat after the aquisition of a new equipement
         ###Base attributs + Equipments Attributs
         if self.hp == 50:
             self.hp = self.max_hp
@@ -103,7 +102,7 @@ class Hero(Character):
         self.armor += self.inventory.equipement.calculate_armor_from_stuff()
 
     # USED
-    def generate_new_stat_after_lvl_up(self):
+    def stats_improve_from_level_up(self):
         self.max_hp += 2*self.lvl
         self.hp = self.max_hp # We give the life back of the hero
         self.mp += 2*self.lvl
@@ -112,13 +111,13 @@ class Hero(Character):
         self.armor += 2*self.lvl
 
     # USED
-    def check_if_lvl_up(self):
-        while self.currentexp >= self.requiredexp:
+    def check_for_level_up(self):
+        while self.xp >= self.next_level_xp:
             self.lvl += 1
             self.mp += 10
-            self.currentexp -= self.requiredexp
-            self.requiredexp += 2
-            self.generate_new_stat_after_lvl_up()
+            self.xp -= self.next_level_xp
+            self.next_level_xp += 2
+            self.stats_improve_from_level_up()
             print("Vous avez gagné un niveau")
 
     # USED
@@ -131,6 +130,7 @@ class Hero(Character):
     def receive_damage(self, value):
         self.hp -= value
 
+    #CHANGE SPELL DEPENDING ON THE HERO'S CLASS (WITH IF self.class == ...)
     # USED
     def magic_skill_1(self, monster): #Like the basic attack, but strongest
         damage = 2 * (randint(self.min_atk, self.max_atk))
@@ -152,7 +152,7 @@ class Hero(Character):
     # USED
     def magic_skill_3(self, monster):  #Reduce the monster attack by 20%
         value = 2 * self.lvl
-        monster.reduce_atk_monster(value)
+        monster.reduce_enemy_attack(value)
         self.mp -= 20
 
     # USED but to modify
@@ -236,6 +236,9 @@ class Hero(Character):
                 choice = self.want_to_change_armor()
                 if int(choice) == 1:
                     self.swap_stuff(shoes, item)
+                    tmp = shoes
+                    shoes = item
+                    item = tmp
                 else:
                     print("On ne change pas de shoes")
 
@@ -243,8 +246,8 @@ class Hero(Character):
 
     # USED but to modify
     def want_to_change_armor(self):
-        print(
-            "Voulez vous changer l'équipement : 1 Pour changer ,0 pour ne rien changer")
+        print("Voulez vous changer l'équipement : 1 Pour changer ,0 pour ne rien changer")
+        print("-------------------------------------------------------------------------")
         while True:
             choice = input("")
             try:
@@ -261,11 +264,10 @@ class Hero(Character):
 
     # USED but to modify
     def swap_stuff(self, weapon_equiped, new_weapon):
-        print("We swap stuff")
+        print("You succesfully change your're stuff")
         tempo = weapon_equiped
         weapon_equiped = new_weapon
         new_weapon = tempo
-
         if isinstance(weapon_equiped, Weapon):
             new_min_attack = weapon_equiped.min_atk - new_weapon.min_atk
             new_max_attack = weapon_equiped.max_atk - new_weapon.max_atk
