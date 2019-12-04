@@ -61,24 +61,12 @@ class Hero(Character):
     def get_lvl(self):
         return self.lvl
 
-    #USED
-    def description_skill1_display(self):
-        print("Sort 1 : Sort qui inflige de gros dégats sur un monstre : coûte 20 mp")
-
-    # USED
-    def description_skill2_display(self):
-        print("Sort 2 : Redonne 15% de sa vie au héros : coûte 30 mp")
-
-    # USED
-    def description_skill3_display(self):
-        print("Sort 3 : Reduit l'attaque d'un monstre de 20% : coûte 20 mp")
-
     # USED
     def show_skill_in_book(self):
-        print("Vous avez 3 sorts a disposition : ")
-        self.description_skill1_display()
-        self.description_skill2_display()
-        self.description_skill3_display()
+        print("You have 3 different skill :  ")
+        print(" (1) skill 1 : Deal hight damage to a monster : cost 20 mp")
+        print(" (2) skill 2 : Give back 20% of hero's life : cost 30 mp")
+        print(" (3) skill 3 : Reduce enemy's attack by 25% : cost 20 mp")
 
     # USED
     def mana_available_check(self, spell):  #We check if we can cast the spell  #20 30 15 30 20
@@ -118,41 +106,42 @@ class Hero(Character):
             self.xp -= self.next_level_xp
             self.next_level_xp += 2
             self.stats_improve_from_level_up()
-            print("Vous avez gagné un niveau")
+            print("################")
+            print("YOU LEVEL UP !!!")
+            print("################")
 
     # USED
-    def basic_attack(self, monster):
+    def basic_attack(self, enemy):
         damage = randint(self.min_atk, self.max_atk)
-        print("Vous attaquez le monstre et fait ", damage, "dégats.")
-        monster.attack_monster(damage)
+        print("You hit the enemy and deal : "+ str(damage) + " damages.")
+        enemy.attack_enemy(damage)
 
     # USED
     def receive_damage(self, value):
         self.hp -= value
 
-    #CHANGE SPELL DEPENDING ON THE HERO'S CLASS (WITH IF self.class == ...)
     # USED
-    def magic_skill_1(self, monster): #Like the basic attack, but strongest
+    def magic_skill_1(self, enemy): #Like the basic attack, but strongest
         damage = 2 * (randint(self.min_atk, self.max_atk))
-        print("Vous attaquez le monstre en faisait", damage, "dégats.")
-        monster.attack_monster(damage)
+        print("You strongly hit the enemy and deal :" + str(damage) + " damages.")
+        enemy.attack_enemy(damage)
         self.mp -= 20
 
     # USED
     def magic_skill_2(self): #Give back 15% of the hero max hp
-        heal = self.max_hp * 0.15
+        heal = self.max_hp * 0.20
         if self.hp + heal >= self.max_hp:
-            print("Vous avez recuperer toutes votre vie")
+            print("You ")
             self.hp = self.max_hp
         else:
-            print("Après le soin, vous avez", self.hp," points de vies")
+            print("After your healing incantation ou have now : " + str(self.hp) + " HP")
             self.hp += heal
         self.mp -= 30
 
     # USED
-    def magic_skill_3(self, monster):  #Reduce the monster attack by 20%
+    def magic_skill_3(self, enemy):  #Reduce the monster attack by 20%
         value = 2 * self.lvl
-        monster.reduce_enemy_attack(value)
+        enemy.reduce_enemy_attack(value)
         self.mp -= 20
 
     # USED but to modify
@@ -164,74 +153,74 @@ class Hero(Character):
         chest = self.inventory.equipement.chest
         legs = self.inventory.equipement.legs
         shoes = self.inventory.equipement.shoes
-        print("Il y a", len(loot), "objets dans votre inventaire, nous allons regarder si ces derniers vous interessent : ")
+        print("There are", len(loot), "peace of equipment in your inventory, let's take a look at it :")
         for i in range(len(loot)):
             item = loot[i]
             if isinstance(loot[i], Weapon):
-                print("L'item ", i + 1, "de l'inventaire est un weapon")
-                print("Arme équipée : ")
+                print("Object " + str(i + 1) + " : Weapon ")
+                print("Weapon equiped : ")
                 weapon.show_stat_object()
-                print("Arme de l'inventaire : ")
+                print("Weapon from the inventory : ")
                 item.show_stat_object()
                 choice = self.want_to_change_armor()
                 if int(choice) == 1:
                     self.swap_stuff(weapon, item)
                 else:
-                    print("On ne change pas d'arme")
+                    print("Don't change the weapon !")
 
             elif isinstance(loot[i], Jewel):
-                print("L'item ", i + 1, "de l'inventaire est un jewel")
-                print("Jewel équipé : ")
+                print("Object " + str(i + 1) + " : Jewel ")
+                print("Jewel equiped : ")
                 jewel.show_stat_object()
-                print("Jewel de l'inventaire : ")
+                print("Jewel from the inventory : ")
                 item.show_stat_object()
                 choice = self.want_to_change_armor()
                 if int(choice) == 1:
                     self.swap_stuff(jewel, item)
                 else:
-                    print("On ne change pas de jewel")
+                    print("Don't change the jewel !")
 
             elif isinstance(loot[i], Head):
-                print("L'item ", i + 1, "de l'inventaire est une head")
-                print("Head équipé : ")
+                print("Object " + str(i + 1) + " : Head ")
+                print("Head equiped : ")
                 head.show_stat_object()
-                print("Head de l'inventaire : ")
+                print("Head from the inventory : ")
                 item.show_stat_object()
                 choice = self.want_to_change_armor()
                 if int(choice) == 1:
                     self.swap_stuff(head, item)
                 else:
-                    print("On ne change pas d'head")
+                    print("Don't change the head !")
 
             elif isinstance(loot[i], Chest):
-                print("L'item ", i + 1, "de l'inventaire est un chest")
-                print("Chest équipé : ")
+                print("Object " + str(i + 1) + " : Chest ")
+                print("Chest equiped : ")
                 chest.show_stat_object()
-                print("Chest de l'inventaire : ")
+                print("Chest from the inventory: ")
                 item.show_stat_object()
                 choice = self.want_to_change_armor()
                 if int(choice) == 1:
                     self.swap_stuff(chest, item)
                 else:
-                    print("On ne change pas de chest")
+                    print("Don't change the chest !")
 
             elif isinstance(loot[i], Legs):
-                print("L'item ", i + 1, "de l'inventaire est un leg")
-                print("Legs équipé : ")
+                print("Object " + str(i + 1) + " : Legs ")
+                print("Legs equiped : ")
                 legs.show_stat_object()
-                print("Legs de l'inventaire : ")
+                print("Legs from the inventory")
                 item.show_stat_object()
                 choice = self.want_to_change_armor()
                 if int(choice) == 1:
                     self.swap_stuff(legs, item)
                 else:
-                    print("On ne change pas de legs")
+                    print("Don't change the legs !")
 
             elif isinstance(loot[i], Shoes):
-                print("L'item ", i + 1, "de l'inventaire est des shoes")
-                print("shoes équipé : ")
+                print("Object " + str(i + 1) + " : SHoes ")
+                print("Shoes equiped : ")
                 shoes.show_stat_object()
-                print("shoes de l'inventaire : ")
+                print("shoes from the inventory : ")
                 item.show_stat_object()
                 choice = self.want_to_change_armor()
                 if int(choice) == 1:
@@ -240,47 +229,50 @@ class Hero(Character):
                     shoes = item
                     item = tmp
                 else:
-                    print("On ne change pas de shoes")
-
-            input("Presse enter")
+                    print("Don't change the shoes !")
+            print("#####################")
+            input("     Press enter     ")
+            print("#####################")
 
     # USED but to modify
     def want_to_change_armor(self):
-        print("Voulez vous changer l'équipement : 1 Pour changer ,0 pour ne rien changer")
+        print("Do you want to trade equipment 1 for equipement 2 ? ")
+        print(" (1) Yes")
+        print(" (2) No ")
         print("-------------------------------------------------------------------------")
         while True:
             choice = input("")
             try:
                 if int(choice) == 1:
                     return 1
-                elif int(choice) == 0:
-                    return 0
+                elif int(choice) == 2:
+                    return 2
 
                 else:
-                    print("Valeur invalide, essayer encore")
+                    print("Please enter a correct value !")
 
             except ValueError:
-                print("Valeur invalide, essayer encore")
+                print("Please enter a correct value !")
 
     # USED but to modify
-    def swap_stuff(self, weapon_equiped, new_weapon):
+    def swap_stuff(self, stuff_equiped, stuuf_from_inventory):
         print("You succesfully change your're stuff")
-        tempo = weapon_equiped
-        weapon_equiped = new_weapon
-        new_weapon = tempo
-        if isinstance(weapon_equiped, Weapon):
-            new_min_attack = weapon_equiped.min_atk - new_weapon.min_atk
-            new_max_attack = weapon_equiped.max_atk - new_weapon.max_atk
-            self.min_atk += new_min_attack
-            self.max_atk += new_max_attack
-        elif isinstance(weapon_equiped, Jewel):
-            new_hp = weapon_equiped.hp - new_weapon.hp
-            new_mp = weapon_equiped.mp - new_weapon.mp
-            self.max_hp += new_hp
-            self.mp += new_mp
-        else:
-            new_hp = weapon_equiped.hp - new_weapon.hp
-            new_armor = weapon_equiped.armor - new_weapon.armor
-            self.max_hp += new_hp
-            self.armor += new_armor
+        tempo = stuff_equiped
+        stuff_equiped = stuuf_from_inventory
+        stuuf_from_inventory = tempo
+        #if isinstance(stuff_equiped, Weapon):
+        new_min_attack = stuff_equiped.min_atk - stuuf_from_inventory.min_atk
+        new_max_attack = stuff_equiped.max_atk - stuuf_from_inventory.max_atk
+        self.min_atk += new_min_attack
+        self.max_atk += new_max_attack
+        #elif isinstance(stuff_equiped, Jewel):
+        new_hp = stuff_equiped.hp - stuuf_from_inventory.hp
+        new_mp = stuff_equiped.mp - stuuf_from_inventory.mp
+        self.max_hp += new_hp
+        self.mp += new_mp
+        #else:
+        new_hp = stuff_equiped.hp - stuuf_from_inventory.hp
+        new_armor = stuff_equiped.armor - stuuf_from_inventory.armor
+        self.max_hp += new_hp
+        self.armor += new_armor
 

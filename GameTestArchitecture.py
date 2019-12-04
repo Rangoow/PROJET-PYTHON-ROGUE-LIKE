@@ -52,7 +52,7 @@ class gameTestArchitecture:
 
     def menu(self):
         print("")
-        print("You are at level : ", self.level,'.')
+        print("You are at level : " + str(self.level) +'.')
         self.disp_separator(21)
         print("Choose an action : ")
         self.disp_separator(21)
@@ -109,8 +109,9 @@ class gameTestArchitecture:
             print("You encounter an evil CIA agent ! Let's fight against him")
             self.disp_separator(50)
         elif self.level >= 20:
-            print("You are at the final, let's defeat Donald Trump and recover the Alien eggs !")
-            self.disp_separator(69)
+            print("Dear " + str(self.hero.classe) + " you reached the las point of this adventure...")
+            print("You are at the final, let's defeat Donald Trump and recover the Alien eggs !!")
+            self.disp_separator(70)
         self.battle()
 
     def battle(self):
@@ -119,9 +120,9 @@ class gameTestArchitecture:
             enemy.generate_final_boss()
         else:
             enemy.generate_enemy(self.level)
-        while self.hero.hp > 0 and enemy.hp > 0:
+        while self.hero.hp > 0 and enemy.HP > 0:
             self.disp_separator(16)
-            print("Eneny has :" + str(enemy.hp) + "/" + str(enemy.max_hp))
+            print("Eneny has :" + str(enemy.HP) + "/" + str(enemy.maxHP))
             print("You have  :" + str(self.hero.hp) + "/" + str(self.hero.max_hp))
             self.disp_separator(16)
             self.disp_blank(1)
