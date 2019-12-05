@@ -20,7 +20,7 @@ class Equipments(Objects):
         self.loot = []
 
 
-    def generate_base_equipement(self, level):
+    def first_stuff(self, level):
         self.weapon = Weapon.generate_random_weapon(self, level)
         self.jewel = Jewel.generate_random_jewel(self, level)
         self.head = Head.generate_random_head(self, level)
@@ -30,20 +30,20 @@ class Equipments(Objects):
 
 
     # To calculate a specific stat from all the stuff equiped
-    def calculate_hp_from_stuff(self):
-        return self.jewel.get_hp() + self.head.get_hp() + self.chest.get_hp() + self.legs.get_hp() + self.shoes.get_hp()
+    def stuff_HP(self):
+        return self.jewel.get_bonus_HP() + self.head.get_bonus_HP() + self.chest.get_bonus_HP() + self.legs.get_bonus_HP() + self.shoes.get_bonus_HP()
 
-    def calculate_mp_from_stuff(self):
-        return self.jewel.get_mp()
+    def stuff_MP(self):
+        return self.jewel.get_bonus_MP()
 
-    def calculate_min_atk_from_stuff(self):
-        return self.weapon.get_min_atk()
+    def stuff_min_damage(self):
+        return self.weapon.get_min_damage()
 
-    def calculate_max_atk_from_stuff(self):
-        return self.weapon.get_max_atk()
+    def stuff_max_damage(self):
+        return self.weapon.get_max_damage()
 
-    def calculate_armor_from_stuff(self):
-        return self.head.get_armor() + self.chest.get_armor() + self.legs.get_armor() + self.shoes.get_armor()
+    def stuff_armor(self):
+        return self.head.get_bonus_armor() + self.chest.get_bonus_armor() + self.legs.get_bonus_armor() + self.shoes.get_bonus_armor()
 
 
 

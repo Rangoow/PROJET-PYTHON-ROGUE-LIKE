@@ -1,5 +1,5 @@
 from Hero import *
-from Monster import *
+from Enemy import *
 import os
 import sys
 import random
@@ -68,13 +68,12 @@ class gameTestArchitecture:
             self.room.append(3)
         while self.game_state():
             self.menu()
+            print("Your HP are : " + str(self.hero.HP) + " / " + str(self.hero.maxHP))
             try:
                 choice = input(">> ")
                 if int(choice) == 1:
-                    self.disp_blank(1)
                     self.adventure_continue()
                 elif int(choice) == 2:
-                    self.disp_blank(1)
                     self.hero.displayStat()
                 elif int(choice) == 3:
                     print("Thanks for your participation !")
@@ -88,6 +87,7 @@ class gameTestArchitecture:
         while self.level != 20:
             if self.level % 3 != 0:
                 self.random_action()
+                break
             else: #each 3 level offer the possibility to came back to main menu (and check info of hero or exit)
                 self.level+=1
                 break
@@ -108,26 +108,28 @@ class gameTestArchitecture:
         if self.level < 20:
             print("You encounter an evil CIA agent ! Let's fight against him")
             self.disp_separator(50)
+            self.battle()
         elif self.level >= 20:
-            print("Dear " + str(self.hero.classe) + " you reached the las point of this adventure...")
+            print("Dear " + str(self.hero.className) + " you reached the las point of this adventure...")
             print("You are at the final, let's defeat Donald Trump and recover the Alien eggs !!")
             self.disp_separator(70)
-        self.battle()
+            self.battle()
 
     def battle(self):
-        enemy = Monster()
+        enemy = Enemy()
         if self.level >= 20:
             enemy.generate_final_boss()
         else:
             enemy.generate_enemy(self.level)
-        while self.hero.hp > 0 and enemy.HP > 0:
-            self.disp_separator(16)
-            print("Eneny has :" + str(enemy.HP) + "/" + str(enemy.maxHP))
-            print("You have  :" + str(self.hero.hp) + "/" + str(self.hero.max_hp))
-            self.disp_separator(16)
+        while self.hero.HP > 0 and enemy.HP > 0:
+            self.disp_separator(18)
+            print("Enemy has : " + str(enemy.HP) + "/" + str(enemy.maxHP))
+            print("You have  : " + str(self.hero.HP) + "/" + str(self.hero.maxHP))
+            self.disp_separator(18)
             self.disp_blank(1)
             pass_turn = True
             while pass_turn:
+                print("Your HP are : " + str(self.hero.HP) + " / " + str(self.hero.maxHP))
                 print("Choose an action : ")
                 self.disp_separator(21)
                 print("   (1) Attack        ")
@@ -143,6 +145,8 @@ class gameTestArchitecture:
                         self.use_potion()
                     elif int(choice) == 3:
                         print("End of your turn")
+                        self.disp_separator(1)
+                        enemy.attack_hero(self.hero)
                         pass_turn = False
 
                     else:
@@ -150,13 +154,13 @@ class gameTestArchitecture:
                 except ValueError:
                     print("Please enter a correct Value")
 
-        if self.hero.hp > 0:
+        if self.hero.HP > 0:
             print("Vous avez fini la salle numero ", self.level, ".")
             self.hero.check_for_level_up()
             print("Que voulez vous faire : ")
             self.hero.change_equipement()
             self.level += 1
-            # Passer a la salle suivant/ regarder son inventaire.
+            # Passer a la salle suivante / regarder son inventaire.
             add_rest_chance = randint(1, 5)
             if add_rest_chance > 3:
                 print("You aerned an additional rest ! ")
@@ -171,13 +175,15 @@ class gameTestArchitecture:
         while True:
             choice = input(">> ")
             try:
-                if int(choice) == 1 and self.hero.hp < self.hero.max_hp:
-                    self.hero.hp += self.level*4
-                    if self.hero.hp > self.hero.max_hp:
-                        self.hero.hp = self.hero.max_hp
+                if int(choice) == 1 and self.hero.HP < self.hero.maxHP:
+                    self.hero.HP += self.level * 4
+                    if self.hero.HP > self.hero.maxHP:
+                        self.hero.HP = self.hero.maxHP
+                        print("     You recover some HP !")
                     break
                 elif int(choice) == 2:
-                    self.hero.mp += 20
+                    self.hero.MP += 20
+                    print("     You recover 20 magic point !")
                     break
                 elif int(choice) == 3:
                     break
@@ -187,7 +193,7 @@ class gameTestArchitecture:
                 print("Please enter a correct Value")
 
     def attack_possibility(self, enemy):
-        while enemy.hp > 0 and self.hero.hp > 0:
+        while enemy.HP > 0 and self.hero.HP > 0:
             self.disp_separator(21)
             print("   (1) Basic Attack   ")
             print("   (2) Magic attack   ")
@@ -300,20 +306,20 @@ class gameTestArchitecture:
             while True:
                 choice = input(">> ")
                 try:
-                    if int(choice)==1 and self.hero.hp < self.hero.max_hp:
-                        hprestored = randint(self.hero.lvl * 3,self.hero.lvl*5)
-                        self.hero.hp += hprestored
-                        if self.hero.hp > self.hero.max_hp:
-                            self.hero.hp = self.hero.max_hp
+                    if int(choice)==1 and self.hero.HP < self.hero.maxHP:
+                        hprestored = randint(self.hero.heroLevel * 3, self.hero.heroLevel * 5)
+                        self.hero.HP += hprestored
+                        if self.hero.HP > self.hero.maxHP:
+                            self.hero.HP = self.hero.maxHP
                         self.disp_blank(1)
                         print("You took a 10 minutes break, you're now ready !")
-                        print("You have now : " + str(self.hero.hp) + "/" + str(self.hero.max_hp) + "HP.")
+                        print("You have now : " + str(self.hero.HP) + "/" + str(self.hero.maxHP) + "HP.")
                         self.disp_blank(1)
                         self.hero.restLeft -= 1
                         break
                     elif int(choice) == 2:
                         break
-                    elif self.hero.hp > self.hero.max_hp:
+                    elif self.hero.HP > self.hero.maxHP:
                         print("You are full health, go fight !")
                     else:
                         print("Please enter a correct Value")
@@ -321,7 +327,7 @@ class gameTestArchitecture:
                     print("Please enter a correct Value")
 
     def game_state(self):
-        if self.hero.hp < 0:
+        if self.hero.HP < 0:
             self.disp_separator(35)
             print("Sorry but you are dead, try again !")
             self.disp_separator(35)

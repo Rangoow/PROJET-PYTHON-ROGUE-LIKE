@@ -2,7 +2,7 @@
 from Character import *
 from Equipments import *
 
-class Monster(Character):
+class Enemy(Character):
     def __init__(self):
         Character.__init__(self)
         self.inventory = None
@@ -34,13 +34,13 @@ class Monster(Character):
         minXP = 1
         maxXP = 3
         random_stuff = randint(1, 6)
-        if hero.requiredexp >10:
+        if hero.nextLevelXP >10:
             minXP = 2
             maxXP = 6
-        elif hero.requiredexp > 40:
+        elif hero.nextLevelXP > 40:
             minXP = 4
             maxXP = 10
-        hero.currentexp += randint(minXP, maxXP)
+        hero.XP += randint(minXP, maxXP)
 
         gold = randint(int(self.lvl * 3), int(self.lvl * 6))
         hero.inventory.gold += gold
@@ -49,27 +49,27 @@ class Monster(Character):
         tmp = randint(1,3)
         if tmp == 3:
             if random_stuff == 1:
-                weapon = Weapon.generate_random_weapon(self, hero.lvl + 1)
+                weapon = Weapon.generate_random_weapon(self, hero.heroLevel + 1)
                 print("You've droped a weapon !")
                 hero.inventory.equipement.loot.append(weapon)
             elif random_stuff == 2:
-                jewel = Jewel.generate_random_jewel(self, hero.lvl + 1)
+                jewel = Jewel.generate_random_jewel(self, hero.heroLevel + 1)
                 print("You've droped a jewel !")
                 hero.inventory.equipement.loot.append(jewel)
             elif random_stuff == 3:
-                head = Head.generate_random_head(self, hero.lvl + 1)
+                head = Head.generate_random_head(self, hero.heroLevel + 1)
                 print("You've droped an head !")
                 hero.inventory.equipement.loot.append(head)
             elif random_stuff == 4:
-                chest = Chest.generate_random_chest(self, hero.lvl + 1)
+                chest = Chest.generate_random_chest(self, hero.heroLevel + 1)
                 print("You've droped a chest !")
                 hero.inventory.equipement.loot.append(chest)
             elif random_stuff == 5:
-                legs = Legs.generate_random_legs(self, hero.lvl + 1)
+                legs = Legs.generate_random_legs(self, hero.heroLevel + 1)
                 print("You've droped legs !")
                 hero.inventory.equipement.loot.append(legs)
             elif random_stuff == 6:
-                shoes = Shoes.generate_random_shoes(self, hero.lvl + 1)
+                shoes = Shoes.generate_random_shoes(self, hero.heroLevel + 1)
                 print("You've droped shoes !")
                 hero.inventory.equipement.loot.append(shoes)
 
@@ -86,8 +86,8 @@ class Monster(Character):
     def attack_hero(self, hero):
         damage = randint(int(self.minDamage), int(self.maxDamage))
         hero.receive_damage(damage)
-        print("The enemy deals you : "+  str(damage) + " damages")
-        print("You have : " + str(hero.hp) + " HP")
+        print("The enemy deals you : " + str(damage) + " damages")
+        print("You have : " + str(hero.HP) + " HP")
 
     #USED
     def check_enemy_state(self):
