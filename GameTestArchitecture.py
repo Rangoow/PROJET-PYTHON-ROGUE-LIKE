@@ -2,7 +2,8 @@ from Hero import *
 from Enemy import *
 import os
 import sys
-import random
+import numpy as np
+from DataBaseManagement import *
 
 class gameTestArchitecture:
     def __init__(self):
@@ -10,7 +11,11 @@ class gameTestArchitecture:
         self.hero = Hero()
         self.place = 0
         #Battle = 1 / Shop = 2 / Rest = 3
-        self.room = [1,1,1,1,1]
+        self.room = [1,1,1,1]
+        #Change this value to change the duration of the game
+        self.finalLevel = 30
+        createDB()
+
 
     def display_game_title(self):
         self.disp_separator(36)
@@ -77,6 +82,7 @@ class gameTestArchitecture:
                     self.hero.displayStat()
                 elif int(choice) == 3:
                     print("Thanks for your participation !")
+                    insertData(self.hero.name, self.hero.className, self.hero.heroLevel, self.level,"Yes")
                     sys.exit()
                 else:
                     print("Please enter a correct Value")
@@ -84,16 +90,13 @@ class gameTestArchitecture:
                 print("Please enter a correct Value")
 
     def adventure_continue(self):
-        while self.level != 20:
-            if self.level % 3 != 0:
-                self.random_action()
-                break
-            else: #each 3 level offer the possibility to came back to main menu (and check info of hero or exit)
-                self.level+=1
-                break
+        while self.level != self.finalLevel:
+            self.random_action()
+            break
 
     def random_action(self):
-        tmp = random.choice(self.room)
+        tmp = np.random.choice(self.room)
+        print(tmp)
         if int(tmp) == 1:
             self.disp_blank(1)
             self.random_battle()
@@ -105,11 +108,11 @@ class gameTestArchitecture:
             self.rest()
 
     def random_battle(self):
-        if self.level < 20:
+        if self.level < self.finalLevel:
             print("You encounter an evil CIA agent ! Let's fight against him")
             self.disp_separator(50)
             self.battle()
-        elif self.level >= 20:
+        elif self.level >= self.finalLevel:
             print("Dear " + str(self.hero.className) + " you reached the las point of this adventure...")
             print("You are at the final, let's defeat Donald Trump and recover the Alien eggs !!")
             self.disp_separator(70)
@@ -117,7 +120,7 @@ class gameTestArchitecture:
 
     def battle(self):
         enemy = Enemy()
-        if self.level >= 20:
+        if self.level >= self.finalLevel:
             enemy.generate_final_boss()
         else:
             enemy.generate_enemy(self.level)
@@ -163,7 +166,7 @@ class gameTestArchitecture:
             # Passer a la salle suivante / regarder son inventaire.
             add_rest_chance = randint(1, 5)
             if add_rest_chance > 3:
-                print("You aerned an additional rest ! ")
+                print("You earned an additional rest ! ")
                 self.hero.restLeft += 1
 
     def use_potion(self):
@@ -188,7 +191,7 @@ class gameTestArchitecture:
                 elif int(choice) == 3:
                     break
                 else:
-                    print("Please enter a correct Value")
+                    print("You're fully healed cannot take a Potion")
             except ValueError:
                 print("Please enter a correct Value")
 
@@ -203,11 +206,11 @@ class gameTestArchitecture:
             try:
                 if int(choice) == 1:
                     self.hero.basic_attack(enemy)
-                    enemy.attack_hero(self.hero)
                     if enemy.check_enemy_state():
                         enemy.generate_loot(self.hero)
+                    enemy.attack_hero(self.hero)
                 elif int(choice) == 2:
-                    self.hero.show_skill_in_book()
+                    self.hero.display_skill_available()
                     while True:
                         choice = input(">> ")
                         try:
@@ -217,6 +220,7 @@ class gameTestArchitecture:
                                     self.hero.magic_skill_1(enemy)
                                     if enemy.check_enemy_state():
                                         enemy.generate_loot(self.hero)
+                                    enemy.attack_hero(self.hero)
                                     break
                                 else:
                                     self.disp_blank(1)
@@ -297,6 +301,7 @@ class gameTestArchitecture:
                     print("Please enter a correct Value")
             except ValueError:
                 print("Please enter a correct Value")
+        self.level += 1
 
     def rest(self):
         if self.hero.restLeft >= 0:
@@ -306,7 +311,7 @@ class gameTestArchitecture:
             while True:
                 choice = input(">> ")
                 try:
-                    if int(choice)==1 and self.hero.HP < self.hero.maxHP:
+                    if int(choice) == 1 and self.hero.HP < self.hero.maxHP:
                         hprestored = randint(self.hero.heroLevel * 3, self.hero.heroLevel * 5)
                         self.hero.HP += hprestored
                         if self.hero.HP > self.hero.maxHP:
@@ -325,17 +330,21 @@ class gameTestArchitecture:
                         print("Please enter a correct Value")
                 except ValueError:
                     print("Please enter a correct Value")
+            self.level += 1
 
     def game_state(self):
+        createDB()
         if self.hero.HP < 0:
             self.disp_separator(35)
             print("Sorry but you are dead, try again !")
+            insertData(self.hero.name, self.hero.className, self.hero.heroLevel, self.level, "No")
             self.disp_separator(35)
             self.disp_blank(2)
             return False
-        elif self.level > 20:
+        elif self.level > self.finalLevel:
             self.disp_separator(38)
             print("You finished the game, congratulations !")
+            insertData(self.hero.name, self.hero.className, self.hero.heroLevel, self.level, "Yes")
             self.disp_separator(38)
             return False
         else:

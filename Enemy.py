@@ -5,7 +5,6 @@ from Equipments import *
 class Enemy(Character):
     def __init__(self):
         Character.__init__(self)
-        self.inventory = None
         self.HP = 0
         self.maxHP = 0
         self.minDamage = 0
@@ -17,8 +16,8 @@ class Enemy(Character):
         self.lvl = level
         self.HP = randint(int(level * 2), int(level * 4))
         self.maxHP = self.HP
-        self.minDamage = randint(int(level * 2), int(level * 4))
-        self.maxDamage = randint(int(level * 5), int(level * 7))
+        self.minDamage = randint(int(level * 2), int(level * 3))
+        self.maxDamage = randint(int(level * 3), int(level * 5))
         self.armor = randint(int(level * 2), int(level * 4))
 
     #USED

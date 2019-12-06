@@ -62,6 +62,7 @@ class Hero(Character):
         print("| HP : " + str(self.HP) + "/" + str(self.maxHP) + " | MP : " + str(self.MP) + " | Armor : " + str(self.armor) + " |")
         print("| Damage Range : " + str(self.minDamage) + " - " + str(self.maxDamage) + " |")
         print("| Next level XP needed : " + str(self.nextLevelXP) + " | Actual XP : " + str(self.XP) + " |")
+        print("| HP potion : " + str(self.number_of_hp_pots) + " | MP potion : " + str(self.number_of_mp_pots) + " |")
         print("| Gold : " + str(self.inventory.getGold()) + " |")
         print("#   #    #   #   #   #   #   #   #    #   #   #   #  ")
 
@@ -74,20 +75,29 @@ class Hero(Character):
         return self.heroLevel
 
     # USED
-    def show_skill_in_book(self):
-        print("You have 3 different skill :  ")
-        print(" (1) skill 1 : Deal hight damage to a monster : cost 20 MP")
-        print(" (2) skill 2 : Give back 20% of hero's life : cost 30 MP")
-        print(" (3) skill 3 : Reduce enemy's attack by 25% : cost 20 MP")
+    def display_skill_available(self):
+        print("             You have 3 different skill :                ")
+        print(" (1) skill 1 : Deal hight damage to an enemy : cost 20 MP")
+        print(" (2) skill 2 : Give back 20% of hero's life  : cost 30 MP")
+        print(" (3) skill 3 : Reduce enemy's attack by 25%  : cost 20 MP")
 
     # USED
     def mana_available_check(self, spell):  #We check if we can cast the spell  #20 30 15 30 20
         if spell == 1:
-            return True if self.MP >= 20 else False
+            if self.MP >= 20:
+                return True
+            else:
+                return False
         elif spell == 2:
-            return True if self.MP >= 30 else False
+            if self.MP >= 30:
+                return True
+            else:
+                False
         elif spell == 3:
-            return True if self.MP >= 15 else False
+            if self.MP >= 15:
+                return True
+            else:
+                return False
 
     #USED
     def stats_improve_from_stuff(self): #To calculate the stat after the aquisition of a new equipement
