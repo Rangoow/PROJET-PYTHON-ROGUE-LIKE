@@ -5,10 +5,9 @@ from Head import *
 from Chest import *
 from Legs import *
 from Shoes import *
-from GameTestArchitecture import *
-from Hero import *
 
-
+#Define all type of equipements available
+#Based on minecrfat system head, chest, legs, shoes, weapon and we add jewel
 class Equipments(Objects):
     def __init__(self):
         self.weapon = Weapon()
@@ -19,7 +18,7 @@ class Equipments(Objects):
         self.shoes = Shoes()
         self.loot = []
 
-
+    #generate the random first stuff when the player is created
     def first_stuff(self, level):
         self.weapon = Weapon.generate_random_weapon(self, level)
         self.jewel = Jewel.generate_random_jewel(self, level)
@@ -29,7 +28,7 @@ class Equipments(Objects):
         self.shoes = Shoes.generate_random_shoes(self, level)
 
 
-    # To calculate a specific stat from all the stuff equiped
+    #Calculate all the new stats based on the stuff equiped (HP / MP /DAMAGE / ARMOR)
     def stuff_HP(self):
         return self.jewel.get_bonus_HP() + self.head.get_bonus_HP() + self.chest.get_bonus_HP() + self.legs.get_bonus_HP() + self.shoes.get_bonus_HP()
 

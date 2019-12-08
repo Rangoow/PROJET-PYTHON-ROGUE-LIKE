@@ -11,16 +11,16 @@ class Enemy(Character):
         self.maxDamage = 0
         self.armor = 0
 
-    #USED
+    #generate an enemy with random stats based on the level
     def generate_enemy(self, level):
         self.lvl = level
-        self.HP = randint(int(level * 2), int(level * 4))
+        self.HP = randint(int(level * 4), int(level * 6)) + 20
         self.maxHP = self.HP
         self.minDamage = randint(int(level * 2), int(level * 3))
         self.maxDamage = randint(int(level * 3), int(level * 5))
-        self.armor = randint(int(level * 2), int(level * 4))
+        self.armor = randint(int(level), int(level * 4))
 
-    #USED
+    #generate the final boss with some random stats depending on the level which is always the last one
     def generate_final_boss(self, level):
         self.lvl = level*5
         self.HP = 1000
@@ -29,6 +29,7 @@ class Enemy(Character):
         self.maxDamage = randint(int(level * 6), int(level * 8))
         self.armor = randint(int(level * 4), int(level * 6))
 
+    #generate randomly gold, XP and loot after an enemy death
     def generate_loot(self, hero):
         minXP = 1
         maxXP = 3
@@ -72,23 +73,24 @@ class Enemy(Character):
                 print("You've droped shoes !")
                 hero.inventory.equipement.loot.append(shoes)
 
-    #USED
+    #permit the hero to attack the enemy and reduce his health
     def attack_enemy(self, value):
         self.HP -= value
-    #USED
+
+    #permit the player to reduce the enemy attack from 25%
     def reduce_enemy_attack(self, value):
         self.minDamage -= 0.25 * self.minDamage
         self.maxDamage -= 0.25 * self.maxDamage
         print("You reduce the enemy attack to : " + str(value))
 
-    #USED
+    #Permit the enemy to attack the hero and reduce his health
     def attack_hero(self, hero):
         damage = randint(int(self.minDamage), int(self.maxDamage))
         hero.receive_damage(damage)
         print("The enemy deals you : " + str(damage) + " damages")
         print("You have : " + str(hero.HP) + " HP")
 
-    #USED
+    #Check if the enmy is still alive or not and return a boolean (True = dead / False = alive)
     def check_enemy_state(self):
         if self.HP > 0:
             print("The enemy has : " + str(self.HP) + "HP after your attack")

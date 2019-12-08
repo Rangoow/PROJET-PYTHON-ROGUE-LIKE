@@ -1,4 +1,5 @@
-from GameTestArchitecture import *
+from GameArchitecture import *
 
-RogueLike = gameTestArchitecture()
+#Instancing the game and launch it
+RogueLike = gameArchitecture()
 RogueLike.startGame()

@@ -4,7 +4,7 @@ from Character import *
 
 
 class Hero(Character):
-
+    #hero constructor defining all basic stats without equipements
     def __init__(self):
         Character.__init__(self)
         self.name = ""
@@ -23,7 +23,10 @@ class Hero(Character):
         self.restLeft = 1
         self.inventory.equipement.first_stuff(self.heroLevel)
         self.stats_improve_from_stuff()
+        self.potionUsed = 0
+        self.mobKilled = 0
 
+    #Setters to changer properly the value of an attributes
     def setHp(self):
         self.HP = self.maxHP
 
@@ -55,7 +58,15 @@ class Hero(Character):
             print("You are not able to choose between 1, 2 or 3, so for the rest of the adventure you'are a fucking noob")
             print("# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n")
 
-    #modify the display add style
+    #Getters to acces specific attributes
+    def get_hp(self):
+        return self.HP
+
+    def get_lvl(self):
+        return self.heroLevel
+
+
+    #Display all the hero informations
     def displayStat(self):
         print("#   #    #   #   #   #   #   #   #    #   #   #   #  ")
         print("| Name : " + str(self.name) + " | Class : " + str(self.className) + " | Level : " + str(self.heroLevel) + " |")
@@ -66,23 +77,16 @@ class Hero(Character):
         print("| Gold : " + str(self.inventory.getGold()) + " |")
         print("#   #    #   #   #   #   #   #   #    #   #   #   #  ")
 
-    #Getters & Setters
 
-    def get_hp(self):
-        return self.HP
-
-    def get_lvl(self):
-        return self.heroLevel
-
-    # USED
+    #Display the 3 skills available
     def display_skill_available(self):
         print("             You have 3 different skill :                ")
         print(" (1) skill 1 : Deal hight damage to an enemy : cost 20 MP")
         print(" (2) skill 2 : Give back 20% of hero's life  : cost 30 MP")
         print(" (3) skill 3 : Reduce enemy's attack by 25%  : cost 20 MP")
 
-    # USED
-    def mana_available_check(self, spell):  #We check if we can cast the spell  #20 30 15 30 20
+    #Check if a spell can be cast depending on the MP available
+    def mana_available_check(self, spell):
         if spell == 1:
             if self.MP >= 20:
                 return True
@@ -99,9 +103,8 @@ class Hero(Character):
             else:
                 return False
 
-    #USED
-    def stats_improve_from_stuff(self): #To calculate the stat after the aquisition of a new equipement
-        ###Base attributs + Equipments Attributs
+    #Change hero stats by adding the bonus stats from equipements to hero stats
+    def stats_improve_from_stuff(self):
         if self.HP == 50:
             self.HP = self.maxHP
         self.maxHP += self.inventory.equipement.stuff_HP()
@@ -111,16 +114,16 @@ class Hero(Character):
         self.maxDamage += self.inventory.equipement.stuff_max_damage()
         self.armor += self.inventory.equipement.stuff_armor()
 
-    # USED
+    #Improve the hero stats after he level up by augmenting his previous stats
     def stats_improve_from_level_up(self):
         self.maxHP += 2 * self.heroLevel
-        self.HP = self.maxHP # We give the life back of the hero
+        self.HP = self.maxHP #fully healed
         self.MP += 2 * self.heroLevel
         self.minDamage += 2 * self.heroLevel
         self.maxDamage += 2 * self.heroLevel
         self.armor += 2*self.heroLevel
 
-    # USED
+    #check if the player have enought xp to reach an other level
     def check_for_level_up(self):
         while self.XP >= self.nextLevelXP:
             self.heroLevel += 1
@@ -128,29 +131,28 @@ class Hero(Character):
             self.XP -= self.nextLevelXP
             self.nextLevelXP += 2
             self.stats_improve_from_level_up()
-            print("################")
-            print("YOU LEVEL UP !!!")
-            print("################")
+            print("#####################")
+            print("   YOU LEVEL UP !!!  ")
+            print("#####################")
 
-    # USED
+    #basic attack that inflict normal damage
     def basic_attack(self, enemy):
         damage = randint(self.minDamage, self.maxDamage)
         print("You hit the enemy and deal : "+ str(damage) + " damages.")
         enemy.attack_enemy(damage)
 
-    # USED
+    #permit the player to receive damage form enemies
     def receive_damage(self, value):
         self.HP -= value
 
-    # USED
     def magic_skill_1(self, enemy): #Like the basic attack, but strongest
         damage = 2 * (randint(self.minDamage, self.maxDamage))
         print("You strongly hit the enemy and deal :" + str(damage) + " damages.")
         enemy.attack_enemy(damage)
         self.MP -= 20
 
-    # USED
-    def magic_skill_2(self): #Give back 15% of the hero max bonusHP
+    # Give back 20% of the hero max HP
+    def magic_skill_2(self):
         heal = self.maxHP * 0.20
         if self.HP + heal >= self.maxHP:
             print("You are fully healed !")
@@ -160,13 +162,14 @@ class Hero(Character):
             self.HP += heal
         self.MP -= 30
 
-    # USED
-    def magic_skill_3(self, enemy):  #Reduce the monster attack by 20%
+    # Reduce the monster attack by 20%
+    def magic_skill_3(self, enemy):
         value = 2 * self.heroLevel
         enemy.reduce_enemy_attack(value)
         self.MP -= 20
 
-    # USED but to modify
+    #Present the equipement available in the inventory and the one equiped
+    #The result of this fonction depend on the peace of equipment store in the inventory
     def change_equipement(self):
         loot = self.inventory.equipement.loot
         weapon = self.inventory.equipement.weapon
@@ -257,7 +260,7 @@ class Hero(Character):
             input("     Press enter     ")
             print("#####################")
 
-    # USED but to modify
+    #Ask the player if he wants to change or not a peace of stuff
     def armor_change(self):
         print("Do you want to trade equipment 1 for equipement 2 ? ")
         print(" (1) Yes")
@@ -277,7 +280,8 @@ class Hero(Character):
             except ValueError:
                 print("Please enter a correct value !")
 
-    # USED but to modify
+    #Permit to change 2 peace of stuff and update the stats of the hero
+    #Display also the new stats after change occured
     def swap_stuff(self, stuff_equiped, stuff_from_inventory):
         print("You succesfully change your're stuff")
         tempo = stuff_equiped
