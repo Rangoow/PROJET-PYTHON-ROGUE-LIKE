@@ -19,13 +19,15 @@ class gameArchitecture:
 
     def display_game_title(self):
         self.disp_separator(36)
-        insertAchievements(achivements7,self.hero.name)
         print('¤ Welcome to the 51 Area Raid RPG! ¤')
         self.disp_separator(36)
         print("You have been call to join the most important mission of the XXIst century...")
         print("They called it : Storm Area 51, They can't stop all of us...")
         print("We are the 20th september and you're actually waiting for the attack start...")
         self.disp_blank(1)
+        insertAchievements(achivements7,self.hero.name)
+        print("¤  YOU EARNED AN ACHIEVEMENTS ! ¤")
+        print("")
 
     def disp_blank(self,n):
         print('\n'*n)
@@ -183,8 +185,10 @@ class gameArchitecture:
                 self.hero.restLeft += 1
             if self.hero.mobKilled == 5:
                 insertAchievements(achivements3,self.hero.name)
+                print("¤  YOU EARNED AN ACHIEVEMENTS ! ¤")
             if self.hero.mobKilled == 10:
                 insertAchievements(achivements4,self.hero.name)
+                print("¤  YOU EARNED AN ACHIEVEMENTS ! ¤")
 
     #permit to use a potion of HP or MP
     def use_potion(self):
@@ -205,6 +209,7 @@ class gameArchitecture:
                     self.hero.potionUsed +=1
                     if self.hero.potionUsed >=3 :
                         insertAchievements(achivements2,self.hero.name)
+                        print("¤  YOU EARNED AN ACHIEVEMENTS ! ¤")
                     break
                 elif int(choice) == 2 and self.hero.number_of_mp_pots > 0:
                     self.hero.MP += 20
@@ -304,6 +309,7 @@ class gameArchitecture:
                         self.hero.inventroy.gold -= hp_pot_price
                         self.hero.number_of_hp_pots += 1
                         insertAchievements(achivements1,self.hero.name)
+                        print("¤  YOU EARNED AN ACHIEVEMENTS ! ¤")
                         break
                     else:
                         self.disp_blank(1)
@@ -369,6 +375,7 @@ class gameArchitecture:
             self.disp_separator(35)
             print("Sorry but you are dead, try again !")
             insertAchievements(achivements6,self.hero.name)
+            print("¤  YOU EARNED AN ACHIEVEMENTS ! ¤")
             insertData(self.hero.name, self.hero.className, self.hero.heroLevel, self.level, "No")
             self.disp_separator(35)
             self.disp_blank(2)
@@ -377,6 +384,7 @@ class gameArchitecture:
             self.disp_separator(38)
             print("You finished the game, congratulations !")
             insertAchievements(achivements5,self.hero.name)
+            print("¤  YOU EARNED AN ACHIEVEMENTS ! ¤")
             insertData(self.hero.name, self.hero.className, self.hero.heroLevel, self.level, "Yes")
             self.disp_separator(38)
             return False
